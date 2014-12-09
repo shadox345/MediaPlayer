@@ -1,6 +1,6 @@
 import java.io.File;
 
-public class AudioFile {
+public abstract class AudioFile {
 
     private String pathname;
     private String filename;
@@ -15,7 +15,20 @@ public class AudioFile {
     	this.pathname = pathname;
     	parsePathname(pathname);
     	parseFilename(filename);
+
+        File testFile = new File(this.getPathname());
+        if (!testFile.canRead()) {
+            throw new RuntimeException("Can't read file:" + this.getPathname());
+        }
     }
+
+    // media control methods
+    public abstract void play();
+    public abstract void togglePause();
+    public abstract void stop();
+    // methods for showing time
+    public abstract String getFormattedDuration();
+    public abstract String getFormattedPosition();
 
     public void parsePathname(String pathname) {
         String os = System.getProperty("os.name").toLowerCase();
@@ -143,5 +156,5 @@ public class AudioFile {
     	}
     	return author + " - " + title;
     }
-    
+
 }

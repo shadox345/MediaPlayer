@@ -12,6 +12,8 @@
 	<!-- Set properties (constants) which can later be used. -->
 	<property name="src.dir" location="src" />
 	<property name="compile.dir" location="classes" />
+	<property name="lib.dir" location="lib" />
+
 	<!-- Variables used for JUnit testing -->
 	<property name="test.report.dir" location="utest.report" />
 	<property name="utest.src" location="tests" />
@@ -21,6 +23,12 @@
 
 	<!-- Create classpath containers which can be later used in the ant task -->
 	<path id="compile.classpath">
+	</path>
+
+	<path id="lib.classpath">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
 	</path>
 
 	<path id="junit3.classpath">
@@ -77,13 +85,14 @@
 	<!-- =============== Compile the code      =============== -->
 	<target name="compile" depends="" description="--> compiles the source code">
 		<mkdir dir="${compile.dir}" />
-		<javac srcdir="${src.dir}" destdir="${compile.dir}" />
+		<javac srcdir="${src.dir}" destdir="${compile.dir}" classpathref="lib.classpath" />
 	</target>
 
 	<!-- =============== Compile JUnit tests     =============== -->
 	<target name="compile.utests" depends="compile" description="compile the unit test sources">
 		<javac srcdir="${utest.src}" destdir="${compile.dir}">
 			<classpath refid="compile.classpath" />
+			<classpath refid="lib.classpath" />
 			<classpath refid="junit4.classpath" />
 		</javac>
 	</target>
@@ -94,6 +103,7 @@
 
 		<junit printsummary="on" fork="true" haltonfailure="yes">
 			<classpath refid="compile.classpath" />
+			<classpath refid="lib.classpath" />
 			<classpath refid="junit4.classpath" />
 			<classpath refid="utest.classpath" />
 
@@ -108,6 +118,7 @@
 	<target name="compile.cert" depends="compile" description="compile the sources of the attestation tests">
 		<javac srcdir="${cert.src}" destdir="${compile.dir}">
 			<classpath refid="compile.classpath" />
+			<classpath refid="lib.classpath" />
 			<classpath refid="junit3.classpath" />
 		</javac>
 	</target>
@@ -118,6 +129,7 @@
 
 		<junit printsummary="on" fork="true" haltonfailure="yes">
 			<classpath refid="compile.classpath" />
+			<classpath refid="lib.classpath" />
 			<classpath refid="junit3.classpath" />
 			<classpath refid="cert.classpath" />
 
