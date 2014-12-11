@@ -4,8 +4,10 @@ public abstract class AudioFile {
 
     private String pathname;
     private String filename;
-    private String author;
-    private String title;
+    protected String author;
+    protected String title;
+    // protected String album;
+    protected String duration;
 
     public AudioFile() {
 
