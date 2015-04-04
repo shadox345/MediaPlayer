@@ -1,3 +1,5 @@
+package studiplayer.audio;
+
 import java.io.File;
 
 public abstract class AudioFile {
@@ -13,24 +15,26 @@ public abstract class AudioFile {
 
     }
     
-    public AudioFile(String pathname) {
+    public AudioFile(String pathname) throws NotPlayableException {
     	this.pathname = pathname;
     	parsePathname(pathname);
     	parseFilename(filename);
 
-        File testFile = new File(this.getPathname());
+        File testFile = new File(pathname);
         if (!testFile.canRead()) {
-            throw new RuntimeException("Can't read file:" + this.getPathname());
+            throw new NotPlayableException(pathname, "Can't read audio file");
         }
     }
 
     // media control methods
-    public abstract void play();
+    public abstract void play() throws NotPlayableException;
     public abstract void togglePause();
     public abstract void stop();
     // methods for showing time
     public abstract String getFormattedDuration();
     public abstract String getFormattedPosition();
+
+    public abstract String[] fields();
 
     public void parsePathname(String pathname) {
         String os = System.getProperty("os.name").toLowerCase();
@@ -93,9 +97,9 @@ public abstract class AudioFile {
             return;
         }
         
-        if(!pathname.startsWith(sep)) {
-        	pathname = sep + pathname;
-        }
+        // if(!pathname.startsWith(sep)) {
+        //	pathname = sep + pathname;
+        // }
 
         this.pathname = pathname;
         filename = pathname.substring(pathname.lastIndexOf(sep) + 1);
